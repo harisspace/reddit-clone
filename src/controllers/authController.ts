@@ -20,6 +20,21 @@ interface ILogin {
   password: string;
 }
 
+const cookieOptions = (route: string) => {
+  const options: any = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  };
+  if (route === "logout") {
+    options.expires = new Date(0);
+  } else if (route === "login") {
+    options.maxAge = 3600;
+  }
+  return options;
+};
+
 const generateToken = (user: users): string => {
   return jwt.sign(user.username, process.env.JWT_SECRET!);
 };
@@ -121,15 +136,22 @@ export default {
 
     res.set(
       "Set-Cookie",
-      cookie.serialize("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        path: "/",
-        maxAge: 3600,
-      })
+      cookie.serialize("token", token, cookieOptions("login"))
     );
 
-    res.json({ user, token });
+    res.json(user);
+  },
+
+  me: async (req: Request, res: Response) => {
+    return res.json(res.locals.user);
+  },
+
+  logout: async (req: Request, res: Response) => {
+    res.set(
+      "Set-Cookie",
+      cookie.serialize("token", "", cookieOptions("logout"))
+    );
+
+    return res.status(200).json({ success: true });
   },
 };
