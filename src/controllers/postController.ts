@@ -21,6 +21,12 @@ export default {
 
     try {
       // TODO: find subname on db
+      const subs = await prisma.subs.findUnique({ where: { name: sub } });
+      if (!subs) {
+        return new AppError(req, res, 403, "User input error", {
+          error: "Subname not exist",
+        });
+      }
 
       // generate slug and identifier
       const slug = slugify(title);
@@ -38,7 +44,6 @@ export default {
           identifier,
         },
       });
-      console.log(post);
       return res.status(200).json(post);
     } catch (err) {
       console.log(err);

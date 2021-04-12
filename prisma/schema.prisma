@@ -39,7 +39,7 @@ model posts {
 model subs {
   id          Int      @id @default(autoincrement())
   sub_uid     String   @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name        String   @db.VarChar(200)
+  name        String   @unique @db.VarChar(200)
   title       String   @db.VarChar(200)
   description String?
   image_urn   String?  @db.VarChar(250)
