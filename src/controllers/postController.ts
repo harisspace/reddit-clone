@@ -52,4 +52,40 @@ export default {
       });
     }
   },
+
+  getPosts: async (req: Request, res: Response) => {
+    try {
+      const posts = await prisma.posts.findMany({
+        include: { users: true, subs: true },
+      });
+      if (!posts) {
+        throw new Error("There is no post");
+      }
+      return res.json(posts);
+    } catch (err) {
+      return new AppError(req, res, 404, "Page not found", {
+        error: err.message,
+      });
+    }
+  },
+
+  getPost: async (req: Request, res: Response) => {
+    const { identifier, slug }: any = req.params;
+
+    try {
+      const post = await prisma.posts.findFirst({
+        where: { identifier, slug },
+        include: { subs: true },
+      });
+
+      if (!post) {
+        throw new Error("Post not found");
+      }
+      return res.json(post);
+    } catch (err) {
+      return new AppError(req, res, 404, "Page not found", {
+        error: err.message,
+      });
+    }
+  },
 };
