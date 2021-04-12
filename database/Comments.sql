@@ -1,5 +1,14 @@
-CREATE TABLE comments {
+CREATE TABLE comments (
   id SERIAL NOT NULL PRIMARY KEY,
   comment_uid UUID NOT NULL DEFAULT uuid_generate_v4(),
-  
-}
+  body TEXT NOT NULL,
+  identifier VARCHAR(150) NOT NULL,
+  username VARCHAR(150) NOT NULL,
+  user_uid UUID NOT NULL,
+  post_uid UUID NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY ("user_uid") REFERENCES "users"(user_uid),
+  FOREIGN KEY ("post_uid") REFERENCES "posts"(post_uid)
+);

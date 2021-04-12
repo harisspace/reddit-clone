@@ -6,9 +6,11 @@ CREATE TABLE posts (
   slug VARCHAR(150) NOT NULL,
   identifier VARCHAR(150) NOT NULL,
   sub_name VARCHAR(150) NOT NULL,
-  user_uid UUID REFERENCES users(user_uid),
+  user_uid UUID NOT NULL,
+  sub_uid UUID NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  FOREIGN KEY ("user_uid") REFERENCES "users"(user_uid) 
+  FOREIGN KEY ("user_uid") REFERENCES "users"(user_uid),
+  FOREIGN KEY ("sub_uid") REFERENCES "subs"(sub_uid)
 )

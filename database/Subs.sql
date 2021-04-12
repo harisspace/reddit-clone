@@ -6,11 +6,10 @@ CREATE TABLE subs (
   description TEXT,
   image_urn VARCHAR(250),
   banner_urn VARCHAR(250),
-  user_uid UUID REFERENCES users(user_uid),
-  post_uid UUID REFERENCES posts(post_uid),
+  user_uid UUID NOT NULL,
+  post_uid UUID,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY ("user_uid") REFERENCES "users"(user_uid),
-  FOREIGN KEY ("post_uid") REFERENCES "posts"(post_uid) 
 );
