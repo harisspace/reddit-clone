@@ -17,6 +17,39 @@ model users {
   password   String   @db.VarChar(250)
   created_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at DateTime @default(now()) @db.Timestamptz(6)
+  posts      posts[]
+  subs       subs[]
+}
+
+model posts {
+  id         Int      @id @default(autoincrement())
+  post_uid   String   @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title      String   @db.VarChar(200)
+  body       String?
+  slug       String   @db.VarChar(150)
+  identifier String   @db.VarChar(150)
+  sub_name   String   @db.VarChar(150)
+  user_uid   String?  @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  users      users?   @relation(fields: [user_uid], references: [user_uid])
+  subs       subs[]
+}
+
+model subs {
+  id          Int      @id @default(autoincrement())
+  sub_uid     String   @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String   @db.VarChar(200)
+  title       String   @db.VarChar(200)
+  description String?
+  image_urn   String?  @db.VarChar(250)
+  banner_urn  String?  @db.VarChar(250)
+  user_uid    String?  @db.Uuid
+  post_uid    String?  @db.Uuid
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+  posts       posts?   @relation(fields: [post_uid], references: [post_uid])
+  users       users?   @relation(fields: [user_uid], references: [user_uid])
 }
 
 enum role {

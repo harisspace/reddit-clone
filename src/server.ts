@@ -6,6 +6,8 @@ import authRoutes from "./routes/authRoutes";
 import cors from "cors";
 import trim from "./utils/trim";
 import cookieParser from "cookie-parser";
+import postRoutes from "./routes/postRoutes";
+import subRoutes from "./routes/subRoutes";
 
 dotenv.config();
 
@@ -24,7 +26,9 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // routes
-app.use("/api/v1", authRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/posts", postRoutes);
+app.use("/api/v1/subs", subRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`running on port ${process.env.PORT}`);

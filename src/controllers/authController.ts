@@ -142,11 +142,11 @@ export default {
     res.json(user);
   },
 
-  me: async (req: Request, res: Response) => {
+  me: async (_: Request, res: Response) => {
     return res.json(res.locals.user);
   },
 
-  logout: async (req: Request, res: Response) => {
+  logout: async (_: Request, res: Response) => {
     res.set(
       "Set-Cookie",
       cookie.serialize("token", "", cookieOptions("logout"))
