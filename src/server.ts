@@ -8,6 +8,7 @@ import trim from "./utils/trim";
 import cookieParser from "cookie-parser";
 import postRoutes from "./routes/postRoutes";
 import subRoutes from "./routes/subRoutes";
+import commentRoutes from "./routes/commentRoutes";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/posts", postRoutes);
 app.use("/api/v1/subs", subRoutes);
+app.use("/api/v1/comments", commentRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`running on port ${process.env.PORT}`);

@@ -36,10 +36,11 @@ export default {
 
       const post = await prisma.posts.create({
         data: {
+          sub_uid: subs.sub_uid,
           title,
           body,
-          sub_name: sub,
           user_uid: user.user_uid,
+          sub_name: sub,
           slug,
           identifier,
         },

@@ -13,4 +13,4 @@ CREATE TABLE posts (
 
   FOREIGN KEY ("user_uid") REFERENCES "users"(user_uid),
   FOREIGN KEY ("sub_uid") REFERENCES "subs"(sub_uid)
-)
+);
