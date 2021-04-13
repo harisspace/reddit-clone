@@ -57,7 +57,7 @@ export default {
   getPosts: async (req: Request, res: Response) => {
     try {
       const posts = await prisma.posts.findMany({
-        include: { users: true, subs: true },
+        include: { users: true, subs: true, comments: true },
       });
       if (!posts) {
         throw new Error("There is no post");

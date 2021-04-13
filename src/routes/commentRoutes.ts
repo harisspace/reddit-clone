@@ -4,6 +4,6 @@ import { checkAuth } from "../utils/checkAuth";
 
 const router = Router();
 
-router.post("/", checkAuth, commentController.createComment);
+router.post("/", checkAuth, commentController.commentOnPost);
 
 export default router;

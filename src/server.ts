@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/posts", postRoutes);
 app.use("/api/v1/subs", subRoutes);
-app.use("/api/v1/comments", commentRoutes);
+app.use("/api/v1/posts/:identifier/:slug/comments", commentRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`running on port ${process.env.PORT}`);
