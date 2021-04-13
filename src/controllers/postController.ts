@@ -3,6 +3,7 @@ import { prisma } from "../server";
 import { AppError } from "../utils/catchError";
 import { users } from "@prisma/client";
 import { slugify, makeid } from "../utils/helpers";
+import { User } from "./authController";
 
 export default {
   createPost: async (req: Request, res: Response) => {
@@ -57,7 +58,13 @@ export default {
   getPosts: async (req: Request, res: Response) => {
     try {
       const posts = await prisma.posts.findMany({
-        include: { users: true, subs: true, comments: true },
+        include: {
+          users: {
+            select: User,
+          },
+          subs: true,
+          comments: true,
+        },
       });
       if (!posts) {
         throw new Error("There is no post");

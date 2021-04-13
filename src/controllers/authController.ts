@@ -7,6 +7,17 @@ import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import { users } from "@prisma/client";
 
+export const User = {
+  id: true,
+  user_uid: true,
+  username: true,
+  first_name: true,
+  last_name: true,
+  email: true,
+  created_at: true,
+  updated_at: true,
+};
+
 interface IRegister {
   username: string;
   first_name: string;
@@ -90,6 +101,7 @@ export default {
           password,
           email,
         },
+        select: User,
       });
     } catch (err) {
       console.log(err);
@@ -128,18 +140,17 @@ export default {
       }
 
       token = generateToken(user);
+      res.set(
+        "Set-Cookie",
+        cookie.serialize("token", token, cookieOptions("login"))
+      );
+
+      res.json(user);
     } catch (err) {
       return new AppError(req, res, 500, "Something went wrong", {
         error: "Something went wrong",
       });
     }
-
-    res.set(
-      "Set-Cookie",
-      cookie.serialize("token", token, cookieOptions("login"))
-    );
-
-    res.json(user);
   },
 
   me: async (_: Request, res: Response) => {
