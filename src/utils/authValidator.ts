@@ -22,15 +22,19 @@ export const registerValidation = (
 ) => {
   let errors: IErrorsRegister = {};
   // validate username, first_name, last_name, and email not empty
-  if (
-    validator.isEmpty(username) ||
-    validator.isEmpty(first_name) ||
-    validator.isEmpty(last_name) ||
-    validator.isEmpty(email) ||
-    validator.isEmpty(password)
-  ) {
-    errors.username = "Username must not empty";
-  }
+  validator.isEmpty(username)
+    ? (errors.username = "Username must not empty")
+    : null;
+  validator.isEmpty(first_name)
+    ? (errors.first_name = "first name must not empty")
+    : null;
+  validator.isEmpty(last_name)
+    ? (errors.last_name = "last name must not empty")
+    : null;
+  validator.isEmpty(email) ? (errors.email = "email must not empty") : null;
+  validator.isEmpty(password)
+    ? (errors.password = "password must not empty")
+    : null;
 
   // validate email
   if (!validator.isEmail(email)) {
@@ -46,9 +50,12 @@ export const registerValidation = (
 export const loginValidation = (username: string, password: string) => {
   let errors: IErrorsLogin = {};
   // validate username, first_name, last_name, and email not empty
-  if (validator.isEmpty(username) || validator.isEmpty(password)) {
-    errors.username = "Username must not empty";
-  }
+  validator.isEmpty(username)
+    ? (errors.username = "Username must not empty")
+    : null;
+  validator.isEmpty(password)
+    ? (errors.password = "password must not empty")
+    : null;
 
   return {
     errors,

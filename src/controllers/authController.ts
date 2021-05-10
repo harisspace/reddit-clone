@@ -79,7 +79,8 @@ export default {
 
       if (user) {
         return new AppError(req, res, 401, "User Input Error", {
-          error: "Username or Email is taken",
+          email: "Username or Email is taken",
+          username: "Username or Email is taken",
         });
       }
     } catch (err) {
@@ -128,14 +129,14 @@ export default {
       user = await prisma.users.findUnique({ where: { username } });
       if (!user) {
         return new AppError(req, res, 404, "User not registered", {
-          error: "User not registered",
+          username: "User not registered",
         });
       }
 
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches) {
         return new AppError(req, res, 401, "User input error", {
-          error: "Incorrect password",
+          password: "Incorrect password",
         });
       }
 
@@ -145,7 +146,7 @@ export default {
         cookie.serialize("token", token, cookieOptions("login"))
       );
 
-      res.json(user);
+      return res.json(user);
     } catch (err) {
       return new AppError(req, res, 500, "Something went wrong", {
         error: "Something went wrong",
