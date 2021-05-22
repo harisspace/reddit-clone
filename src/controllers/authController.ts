@@ -69,7 +69,6 @@ export default {
     );
 
     if (!valid) {
-      console.log("masuk valid");
       return next(new BadRequestError("Bad request input", { errors }));
     }
 

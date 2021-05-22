@@ -23,7 +23,7 @@ export function returnError(
 ) {
   res
     .status(err.statusCode || 500)
-    .json({ message: err.name, errors: err.description });
+    .json({ message: err.message, errors: err.description });
 }
 
 export function isOperationalError(error: any) {

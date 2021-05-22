@@ -1,19 +1,21 @@
 export class BaseError extends Error {
-  public name: string;
+  public message: string;
   public statusCode: number;
   public isOperational: boolean;
+  public description: any;
   constructor(
-    name: string,
+    message: string,
     description: any,
     statusCode: number,
     isOperational: boolean
   ) {
-    super(description);
+    super(message);
 
     Object.setPrototypeOf(this, new.target.prototype);
-    this.name = name;
+    this.message = message;
+    this.description = description;
     this.statusCode = statusCode;
     this.isOperational = isOperational;
-    Error.captureStackTrace(this);
+    Error.captureStackTrace(this, this.constructor);
   }
 }

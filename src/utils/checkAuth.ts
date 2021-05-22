@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { prisma } from "../server";
-import { AppError } from "../utils/catchError";
 import { User } from "../controllers/authController";
+import { UnauthorizedError } from "./errorHandler/UnauthorizedError";
+import { Api404Error } from "./errorHandler/Api404Error";
 
 export const checkAuth = async (
   req: Request,
@@ -12,7 +13,7 @@ export const checkAuth = async (
   let user: object | null;
   try {
     const token: string | undefined | null = req.cookies.token;
-    if (!token) throw new Error("Unauthenticated");
+    if (!token) return next(new UnauthorizedError("Unauthenticated"));
 
     const username: any = jwt.verify(token, process.env.JWT_SECRET!);
 
@@ -22,7 +23,6 @@ export const checkAuth = async (
     res.locals.user = user;
     return next();
   } catch (err) {
-    console.log(err);
-    return new AppError(req, res, 401, err.message, { error: err.message });
+    return next(new Api404Error("User not found", { error: err.message }));
   }
 };
