@@ -1,23 +1,30 @@
 import request from "supertest";
-import authController, { User } from "../controllers/authController";
-import { prisma } from "../server";
 import * as faker from "faker";
 import { app } from "../server";
 
-const BASE_URL = "http://localhost:4000";
-
 describe("POST /auth/register - a register endpoint", () => {
-  test("must return user data", async () => {
-    const data = await request(app)
-      .post(`${BASE_URL}/auth/register`)
+  test("must return user data", (done) => {
+    const username = faker.name.findName();
+    const first_name = faker.name.firstName();
+    const last_name = faker.name.lastName();
+    const password = faker.random.word();
+    const email = faker.internet.email();
+
+    request(app)
+      .post(`/api/v1/auth/register`)
       .send({
-        username: faker.name.findName(),
-        first_name: faker.name.firstName(),
-        last_name: faker.name.lastName(),
-        password: faker.random.word(),
-        email: faker.internet.email(),
+        username,
+        first_name,
+        last_name,
+        password,
+        email,
       })
-      .expect(200);
-    console.log(data);
+      .expect(200)
+      .then((response) => {
+        console.log(response.body);
+        expect(response.body).toBeTruthy();
+        done();
+      })
+      .catch((err) => done(err));
   });
 });

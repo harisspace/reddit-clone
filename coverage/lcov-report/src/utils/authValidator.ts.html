@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">27.78% </span>
+                <span class="strong">72.22% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/18</span>
+                <span class='fraction'>13/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">35% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>7/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">18.75% </span>
+                <span class="strong">68.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/16</span>
+                <span class='fraction'>11/16</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -143,28 +143,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,37 +200,37 @@ interface IErrorsLogin {
   password?: string;
 }
 &nbsp;
-export const registerValidation = <span class="fstat-no" title="function not covered" >(</span>
+export const registerValidation = (
   username: string,
   first_name: string,
   last_name: string,
   email: string,
   password: string
 ) =&gt; {
-  let errors: IErrorsRegister = <span class="cstat-no" title="statement not covered" >{};</span>
+  let errors: IErrorsRegister = {};
   // validate username, first_name, last_name, and email not empty
-<span class="cstat-no" title="statement not covered" >  validator.isEmpty(username)</span>
-    ? (errors.username = "Username must not empty")
+  validator.isEmpty(username)
+    ? (<span class="branch-0 cbranch-no" title="branch not covered" >errors.username = "Username must not empty")</span>
     : null;
-<span class="cstat-no" title="statement not covered" >  validator.isEmpty(first_name)</span>
-    ? (errors.first_name = "first name must not empty")
+  validator.isEmpty(first_name)
+    ? (<span class="branch-0 cbranch-no" title="branch not covered" >errors.first_name = "first name must not empty")</span>
     : null;
-<span class="cstat-no" title="statement not covered" >  validator.isEmpty(last_name)</span>
-    ? (errors.last_name = "last name must not empty")
+  validator.isEmpty(last_name)
+    ? (<span class="branch-0 cbranch-no" title="branch not covered" >errors.last_name = "last name must not empty")</span>
     : null;
-<span class="cstat-no" title="statement not covered" >  validator.isEmpty(email) ? (errors.email = "email must not empty") : null;</span>
-<span class="cstat-no" title="statement not covered" >  validator.isEmpty(password)</span>
-    ? (errors.password = "password must not empty")
+  validator.isEmpty(email) ? (<span class="branch-0 cbranch-no" title="branch not covered" >errors.email = "email must not empty")</span> : null;
+  validator.isEmpty(password)
+    ? (<span class="branch-0 cbranch-no" title="branch not covered" >errors.password = "password must not empty")</span>
     : null;
 &nbsp;
   // validate email
-<span class="cstat-no" title="statement not covered" >  if (!validator.isEmail(email)) {</span>
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!validator.isEmail(email)) {
 <span class="cstat-no" title="statement not covered" >    errors.email = "Email not valid";</span>
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return {</span>
+  return {
     errors,
-    valid: Object.keys(errors).length &lt; 1 ? true : false,
+    valid: Object.keys(errors).length &lt; 1 ? true : <span class="branch-1 cbranch-no" title="branch not covered" >false,</span>
   };
 };
 &nbsp;
@@ -256,7 +256,7 @@ export const loginValidation = <span class="fstat-no" title="function not covere
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 11 2021 22:29:51 GMT+0700 (Western Indonesia Time)
+                at Sat May 22 2021 23:27:45 GMT+0700 (Western Indonesia Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

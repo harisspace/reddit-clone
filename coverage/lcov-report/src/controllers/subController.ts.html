@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">18.18% </span>
+                <span class="strong">25% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/22</span>
+                <span class='fraction'>6/24</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">27.27% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/20</span>
+                <span class='fraction'>6/22</span>
             </div>
         
             
@@ -106,7 +106,12 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -117,7 +122,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -143,23 +147,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Response, Request } from "express";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Response, Request, NextFunction } from "express";
 import validator from "validator";
 import { prisma } from "../server";
-import { AppError } from "../utils/catchError";
 import { users } from "@prisma/client";
+import { ForbiddenError } from "../utils/errorHandler/ForbiddenError";
+import { InternalError } from "../utils/errorHandler/InternalError";
+import { BadRequestError } from "../utils/errorHandler/BadRequestError";
 &nbsp;
 interface ISubErrors {
   title?: string;
@@ -168,7 +174,7 @@ interface ISubErrors {
 }
 &nbsp;
 export default {
-  createSub: <span class="fstat-no" title="function not covered" >async (r</span>eq: Request, res: Response) =&gt;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > {</span></span>
+  createSub: <span class="fstat-no" title="function not covered" >async (r</span>eq: Request, res: Response, next: NextFunction) =&gt;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" > {</span></span>
     const errors: ISubErrors = <span class="cstat-no" title="statement not covered" >{};</span>
     const user: users = <span class="cstat-no" title="statement not covered" >res.locals.user;</span>
     const {
@@ -180,16 +186,18 @@ export default {
 <span class="cstat-no" title="statement not covered" >    if (validator.isEmpty(name)) <span class="cstat-no" title="statement not covered" >errors.name = "Name must not be empty";</span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (Object.keys(errors).length &gt; 0) {</span>
-<span class="cstat-no" title="statement not covered" >      return new AppError(req, res, 403, "User input error", errors);</span>
+<span class="cstat-no" title="statement not covered" >      return next(new BadRequestError("User input error", { errors }));</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const findSub = <span class="cstat-no" title="statement not covered" >await prisma.subs.findFirst({ where: { name } });</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      if (findSub) {</span>
-<span class="cstat-no" title="statement not covered" >        return new AppError(req, res, 400, "Sub already exist", {</span>
-          error: "Cannot create sub, sub already exist",
-        });
+<span class="cstat-no" title="statement not covered" >        return next(</span>
+          new ForbiddenError("Sub already exist", {
+            sub: "Cannot create sub, sub already exist",
+          })
+        );
       }
 &nbsp;
       const sub = <span class="cstat-no" title="statement not covered" >await prisma.subs.create({</span>
@@ -198,9 +206,7 @@ export default {
 <span class="cstat-no" title="statement not covered" >      return res.json(sub);</span>
     } catch (err) {
 <span class="cstat-no" title="statement not covered" >      console.log(err);</span>
-<span class="cstat-no" title="statement not covered" >      return new AppError(req, res, 500, "Something went wrong", {</span>
-        error: "Cannot create sub",
-      });
+<span class="cstat-no" title="statement not covered" >      return next(new InternalError("Something went wrong"));</span>
     }
   },
 };
@@ -211,7 +217,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 11 2021 22:29:51 GMT+0700 (Western Indonesia Time)
+                at Sat May 22 2021 23:27:45 GMT+0700 (Western Indonesia Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
