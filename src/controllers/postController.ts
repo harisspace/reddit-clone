@@ -1,12 +1,14 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import { prisma } from "../server";
-import { AppError } from "../utils/catchError";
 import { users } from "@prisma/client";
 import { slugify, makeid } from "../utils/helpers";
 import { User } from "./authController";
+import { BadRequestError } from "../utils/errorHandler/BadRequestError";
+import { Api404Error } from "../utils/errorHandler/Api404Error";
+import { InternalError } from "../utils/errorHandler/InternalError";
 
 export default {
-  createPost: async (req: Request, res: Response) => {
+  createPost: async (req: Request, res: Response, next: NextFunction) => {
     const {
       title,
       body,
@@ -15,18 +17,18 @@ export default {
     const user: users = res.locals.user;
 
     if (title.trim() === "") {
-      return new AppError(req, res, 400, "Title must not be empty", {
-        error: "Title must not be empty",
-      });
+      return next(
+        new BadRequestError("Title must not be empty", {
+          title: "Title must not be empty",
+        })
+      );
     }
 
     try {
       // TODO: find subname on db
       const subs = await prisma.subs.findUnique({ where: { name: sub } });
       if (!subs) {
-        return new AppError(req, res, 403, "User input error", {
-          error: "Subname not exist",
-        });
+        return next(new Api404Error("Subs not found"));
       }
 
       // generate slug and identifier
@@ -49,13 +51,11 @@ export default {
       return res.status(200).json(post);
     } catch (err) {
       console.log(err);
-      return new AppError(req, res, 500, "Something went wrong", {
-        error: "Cannot create post",
-      });
+      return next(new InternalError("Something went wrong"));
     }
   },
 
-  getPosts: async (req: Request, res: Response) => {
+  getPosts: async (_: Request, res: Response, next: NextFunction) => {
     try {
       const posts = await prisma.posts.findMany({
         include: {
@@ -67,17 +67,15 @@ export default {
         },
       });
       if (!posts) {
-        throw new Error("There is no post");
+        return next(new Api404Error("Post not found"));
       }
       return res.json(posts);
     } catch (err) {
-      return new AppError(req, res, 404, "Page not found", {
-        error: err.message,
-      });
+      return next(new Api404Error("Page not found"));
     }
   },
 
-  getPost: async (req: Request, res: Response) => {
+  getPost: async (req: Request, res: Response, next: NextFunction) => {
     const { identifier, slug }: any = req.params;
 
     try {
@@ -87,13 +85,11 @@ export default {
       });
 
       if (!post) {
-        throw new Error("Post not found");
+        return next(new Api404Error("Post not found"));
       }
       return res.json(post);
     } catch (err) {
-      return new AppError(req, res, 404, "Page not found", {
-        error: err.message,
-      });
+      return next(new Api404Error("Page not found"));
     }
   },
 };

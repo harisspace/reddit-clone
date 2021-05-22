@@ -1,20 +1,23 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import validator from "validator";
 import { prisma } from "../server";
-import { AppError } from "../utils/catchError";
 import { users } from "@prisma/client";
 import { makeid } from "../utils/helpers";
+import { BadRequestError } from "../utils/errorHandler/BadRequestError";
+import { Api404Error } from "../utils/errorHandler/Api404Error";
 
 export default {
-  commentOnPost: async (req: Request, res: Response) => {
+  commentOnPost: async (req: Request, res: Response, next: NextFunction) => {
     const { identifier, slug }: any = req.params;
     const body: string = req.body.body;
     const user: users = res.locals.user;
 
     if (validator.isEmpty(body))
-      return new AppError(req, res, 403, "User input error", {
-        error: "Body must not empty",
-      });
+      return next(
+        new BadRequestError("Bad user input", {
+          body: "Body must not empty",
+        })
+      );
 
     try {
       const post = await prisma.posts.findFirst({
@@ -22,7 +25,7 @@ export default {
       });
 
       if (!post) {
-        throw new Error("Post is not exist");
+        return next(new Api404Error("Post not exist"));
       }
 
       const commentIdentifier = makeid(6);
@@ -39,7 +42,7 @@ export default {
 
       return res.json(comment);
     } catch (err) {
-      return new AppError(req, res, 404, "Page not found", { error: err });
+      return next(new Api404Error("Post not exist"));
     }
   },
 };

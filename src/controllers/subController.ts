@@ -1,8 +1,10 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import validator from "validator";
 import { prisma } from "../server";
-import { AppError } from "../utils/catchError";
 import { users } from "@prisma/client";
+import { ForbiddenError } from "../utils/errorHandler/ForbiddenError";
+import { InternalError } from "../utils/errorHandler/InternalError";
+import { BadRequestError } from "../utils/errorHandler/BadRequestError";
 
 interface ISubErrors {
   title?: string;
@@ -11,7 +13,7 @@ interface ISubErrors {
 }
 
 export default {
-  createSub: async (req: Request, res: Response) => {
+  createSub: async (req: Request, res: Response, next: NextFunction) => {
     const errors: ISubErrors = {};
     const user: users = res.locals.user;
     const {
@@ -23,16 +25,18 @@ export default {
     if (validator.isEmpty(name)) errors.name = "Name must not be empty";
 
     if (Object.keys(errors).length > 0) {
-      return new AppError(req, res, 403, "User input error", errors);
+      return next(new BadRequestError("User input error", { errors }));
     }
 
     try {
       const findSub = await prisma.subs.findFirst({ where: { name } });
 
       if (findSub) {
-        return new AppError(req, res, 400, "Sub already exist", {
-          error: "Cannot create sub, sub already exist",
-        });
+        return next(
+          new ForbiddenError("Sub already exist", {
+            sub: "Cannot create sub, sub already exist",
+          })
+        );
       }
 
       const sub = await prisma.subs.create({
@@ -41,9 +45,7 @@ export default {
       return res.json(sub);
     } catch (err) {
       console.log(err);
-      return new AppError(req, res, 500, "Something went wrong", {
-        error: "Cannot create sub",
-      });
+      return next(new InternalError("Something went wrong"));
     }
   },
 };

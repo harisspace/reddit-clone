@@ -1,11 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { prisma } from "../server";
 import { registerValidation, loginValidation } from "../utils/authValidator";
-import { AppError } from "../utils/catchError";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import { users } from "@prisma/client";
+import { BadRequestError } from "../utils/errorHandler/BadRequestError";
+import { InternalError } from "../utils/errorHandler/InternalError";
+import { Api404Error } from "../utils/errorHandler/Api404Error";
 
 export const User = {
   id: true,
@@ -50,15 +52,13 @@ const generateToken = (user: users): string => {
   return jwt.sign(user.username, process.env.JWT_SECRET!);
 };
 
+// controller auth
+
 export default {
-  register: async (req: Request, res: Response) => {
-    let {
-      username,
-      first_name,
-      last_name,
-      email,
-      password,
-    }: IRegister = req.body;
+  register: async (req: Request, res: Response, next: NextFunction) => {
+    console.log("in");
+    let { username, first_name, last_name, email, password }: IRegister =
+      req.body;
 
     const { errors, valid } = registerValidation(
       username,
@@ -69,7 +69,8 @@ export default {
     );
 
     if (!valid) {
-      return new AppError(req, res, 401, "User Input Error", errors);
+      console.log("masuk valid");
+      return next(new BadRequestError("Bad request input", { errors }));
     }
 
     try {
@@ -78,15 +79,16 @@ export default {
       });
 
       if (user) {
-        return new AppError(req, res, 401, "User Input Error", {
-          email: "Username or Email is taken",
-          username: "Username or Email is taken",
-        });
+        return next(
+          new BadRequestError("Username or email is taken", {
+            username: "Username or email is taken",
+            email: "Username or email is taken",
+          })
+        );
       }
     } catch (err) {
-      return new AppError(req, res, 500, "Something went wrong", {
-        error: "Cannot get user",
-      });
+      console.log(err);
+      return next(new InternalError("Something went wrong"));
     }
 
     let data;
@@ -114,13 +116,13 @@ export default {
     res.json(data);
   },
 
-  login: async (req: Request, res: Response) => {
+  login: async (req: Request, res: Response, next: NextFunction) => {
     const { username, password }: ILogin = req.body;
 
     const { errors, valid } = loginValidation(username, password);
 
     if (!valid) {
-      return new AppError(req, res, 401, "User Input Error", errors);
+      return next(new BadRequestError("Bad user input", { errors }));
     }
 
     let user;
@@ -128,16 +130,16 @@ export default {
     try {
       user = await prisma.users.findUnique({ where: { username } });
       if (!user) {
-        return new AppError(req, res, 404, "User not registered", {
-          username: "User not registered",
-        });
+        return next(new Api404Error("User not found"));
       }
 
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches) {
-        return new AppError(req, res, 401, "User input error", {
-          password: "Incorrect password",
-        });
+        return next(
+          new BadRequestError("Incorrect password", {
+            password: "Incorrect password",
+          })
+        );
       }
 
       token = generateToken(user);
@@ -148,9 +150,7 @@ export default {
 
       return res.json(user);
     } catch (err) {
-      return new AppError(req, res, 500, "Something went wrong", {
-        error: "Something went wrong",
-      });
+      return next(new InternalError("Something went wrong"));
     }
   },
 
