@@ -13,6 +13,7 @@ model users {
   username   String     @unique @db.VarChar(150)
   first_name String     @db.VarChar(100)
   last_name  String     @db.VarChar(100)
+  confirmed  Boolean    @default(false)
   email      String     @unique @db.VarChar(150)
   password   String     @db.VarChar(250)
   created_at DateTime   @default(now()) @db.Timestamptz(6)

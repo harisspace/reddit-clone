@@ -8,6 +8,8 @@ import { users } from "@prisma/client";
 import { BadRequestError } from "../utils/errorHandler/BadRequestError";
 import { InternalError } from "../utils/errorHandler/InternalError";
 import { Api404Error } from "../utils/errorHandler/Api404Error";
+import { Email } from "../utils/email/SendEmail";
+import { ForbiddenError } from "../utils/errorHandler/ForbiddenError";
 
 export const User = {
   id: true,
@@ -48,15 +50,18 @@ const cookieOptions = (route: string) => {
   return options;
 };
 
-const generateToken = (user: users): string => {
-  return jwt.sign(user.username, process.env.JWT_SECRET!);
+const generateToken = (user: Partial<users>): string => {
+  return jwt.sign(
+    { username: user.username, email: user.email },
+    process.env.JWT_SECRET!,
+    { expiresIn: "1d" }
+  );
 };
 
 // controller auth
 
 export default {
   register: async (req: Request, res: Response, next: NextFunction) => {
-    console.log("in");
     let { username, first_name, last_name, email, password }: IRegister =
       req.body;
 
@@ -86,9 +91,12 @@ export default {
         );
       }
     } catch (err) {
-      console.log(err);
       return next(new InternalError("Something went wrong"));
     }
+
+    const token = generateToken({ username, email });
+
+    const sendEmail = new Email(email, token);
 
     let data;
     const salt = await bcrypt.genSalt();
@@ -132,6 +140,8 @@ export default {
         return next(new Api404Error("User not found"));
       }
 
+      const { password: passwordDB, ...newUser } = user;
+
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches) {
         return next(
@@ -147,7 +157,7 @@ export default {
         cookie.serialize("token", token, cookieOptions("login"))
       );
 
-      return res.json(user);
+      return res.json(newUser);
     } catch (err) {
       return next(new InternalError("Something went wrong"));
     }
@@ -164,5 +174,33 @@ export default {
     );
 
     return res.status(200).json({ success: true });
+  },
+
+  confirmation: async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.params.token;
+
+    interface jwtResult {
+      username: string;
+      email: string;
+    }
+
+    const result = jwt.verify(token, process.env.JWT_SECRET!);
+
+    if (!result) {
+      return next(new ForbiddenError("Invalid token"));
+    }
+
+    try {
+      const user = await prisma.users.update({
+        where: {
+          email: (result as Partial<jwtResult>).username,
+        },
+        data: { confirmed: true },
+      });
+    } catch (err) {
+      return next(new Api404Error("User not updated"));
+    }
+
+    res.json({ success: true, redirect: "/api/v1/post" });
   },
 };

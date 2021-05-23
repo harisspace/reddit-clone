@@ -8,5 +8,10 @@ router.post("/register", authController.register);
 router.post("/login", authController.login);
 router.get("/me", checkAuth, authController.me);
 router.get("/logout", checkAuth, authController.logout);
+router.get("/confirmation/:token", authController.confirmation);
+// OAuth
+// router.get("/login/google", (req, res) => {
+
+// })
 
 export default router;

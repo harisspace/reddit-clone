@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1621700865483" clover="3.2.0">
-  <project timestamp="1621700865484" name="All files">
-    <metrics statements="324" coveredstatements="156" conditionals="87" coveredconditionals="16" methods="42" coveredmethods="7" elements="453" coveredelements="179" complexity="0" loc="324" ncloc="324" packages="5" files="21" classes="21"/>
+<coverage generated="1621738285805" clover="3.2.0">
+  <project timestamp="1621738285805" name="All files">
+    <metrics statements="324" coveredstatements="174" conditionals="87" coveredconditionals="22" methods="42" coveredmethods="12" elements="453" coveredelements="208" complexity="0" loc="324" ncloc="324" packages="5" files="21" classes="21"/>
     <package name="src">
       <metrics statements="37" coveredstatements="31" conditionals="4" coveredconditionals="1" methods="3" coveredmethods="1"/>
       <file name="server.ts" path="C:\coding\fullstack\reddit-clone\api\src\server.ts">
@@ -46,9 +46,9 @@
       </file>
     </package>
     <package name="src.controllers">
-      <metrics statements="138" coveredstatements="44" conditionals="34" coveredconditionals="2" methods="20" coveredmethods="2"/>
+      <metrics statements="138" coveredstatements="45" conditionals="34" coveredconditionals="3" methods="20" coveredmethods="2"/>
       <file name="authController.ts" path="C:\coding\fullstack\reddit-clone\api\src\controllers\authController.ts">
-        <metrics statements="59" coveredstatements="25" conditionals="14" coveredconditionals="2" methods="10" coveredmethods="2"/>
+        <metrics statements="59" coveredstatements="26" conditionals="14" coveredconditionals="3" methods="10" coveredmethods="2"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -68,12 +68,12 @@
         <line num="51" count="1" type="stmt"/>
         <line num="52" count="0" type="stmt"/>
         <line num="57" count="1" type="stmt"/>
-        <line num="58" count="1" type="stmt"/>
-        <line num="59" count="1" type="stmt"/>
-        <line num="61" count="1" type="stmt"/>
-        <line num="63" count="1" type="stmt"/>
-        <line num="71" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="72" count="0" type="stmt"/>
+        <line num="58" count="2" type="stmt"/>
+        <line num="59" count="2" type="stmt"/>
+        <line num="61" count="2" type="stmt"/>
+        <line num="63" count="2" type="stmt"/>
+        <line num="71" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="72" count="1" type="stmt"/>
         <line num="75" count="1" type="stmt"/>
         <line num="76" count="1" type="stmt"/>
         <line num="80" count="1" type="cond" truecount="1" falsecount="1"/>
@@ -242,20 +242,20 @@
       </file>
     </package>
     <package name="src.utils">
-      <metrics statements="54" coveredstatements="25" conditionals="28" coveredconditionals="11" methods="8" coveredmethods="3"/>
+      <metrics statements="54" coveredstatements="26" conditionals="28" coveredconditionals="13" methods="8" coveredmethods="3"/>
       <file name="authValidator.ts" path="C:\coding\fullstack\reddit-clone\api\src\utils\authValidator.ts">
-        <metrics statements="16" coveredstatements="11" conditionals="20" coveredconditionals="7" methods="2" coveredmethods="1"/>
+        <metrics statements="16" coveredstatements="12" conditionals="20" coveredconditionals="9" methods="2" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="16" count="1" type="stmt"/>
-        <line num="23" count="1" type="stmt"/>
-        <line num="25" count="1" type="stmt"/>
-        <line num="28" count="1" type="stmt"/>
-        <line num="31" count="1" type="stmt"/>
-        <line num="34" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="35" count="1" type="stmt"/>
-        <line num="40" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="44" count="1" type="stmt"/>
+        <line num="23" count="2" type="stmt"/>
+        <line num="25" count="2" type="stmt"/>
+        <line num="28" count="2" type="stmt"/>
+        <line num="31" count="2" type="stmt"/>
+        <line num="34" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="35" count="2" type="stmt"/>
+        <line num="40" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
         <line num="50" count="1" type="stmt"/>
         <line num="51" count="0" type="stmt"/>
         <line num="53" count="0" type="stmt"/>
@@ -303,15 +303,15 @@
       <file name="trim.ts" path="C:\coding\fullstack\reddit-clone\api\src\utils\trim.ts">
         <metrics statements="6" coveredstatements="6" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
         <line num="3" count="1" type="stmt"/>
-        <line num="4" count="1" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="7" count="5" type="cond" truecount="4" falsecount="0"/>
-        <line num="8" count="4" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="7" count="10" type="cond" truecount="4" falsecount="0"/>
+        <line num="8" count="8" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
       </file>
     </package>
     <package name="src.utils.errorHandler">
-      <metrics statements="67" coveredstatements="28" conditionals="21" coveredconditionals="2" methods="11" coveredmethods="1"/>
+      <metrics statements="67" coveredstatements="44" conditionals="21" coveredconditionals="5" methods="11" coveredmethods="6"/>
       <file name="Api404Error.ts" path="C:\coding\fullstack\reddit-clone\api\src\utils\errorHandler\Api404Error.ts">
         <metrics statements="8" coveredstatements="3" conditionals="3" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
@@ -324,26 +324,26 @@
         <line num="11" count="0" type="stmt"/>
       </file>
       <file name="BadRequestError.ts" path="C:\coding\fullstack\reddit-clone\api\src\utils\errorHandler\BadRequestError.ts">
-        <metrics statements="8" coveredstatements="3" conditionals="3" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <metrics statements="8" coveredstatements="8" conditionals="3" coveredconditionals="2" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="7" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="8" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="9" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="11" count="0" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="cond" truecount="0" falsecount="1"/>
+        <line num="8" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="9" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="11" count="1" type="stmt"/>
       </file>
       <file name="BaseError.ts" path="C:\coding\fullstack\reddit-clone\api\src\utils\errorHandler\BaseError.ts">
-        <metrics statements="8" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
       </file>
       <file name="ForbiddenError.ts" path="C:\coding\fullstack\reddit-clone\api\src\utils\errorHandler\ForbiddenError.ts">
         <metrics statements="8" coveredstatements="3" conditionals="3" coveredconditionals="0" methods="1" coveredmethods="0"/>
@@ -389,15 +389,15 @@
         <line num="7" count="1" type="stmt"/>
       </file>
       <file name="logger.ts" path="C:\coding\fullstack\reddit-clone\api\src\utils\errorHandler\logger.ts">
-        <metrics statements="12" coveredstatements="5" conditionals="4" coveredconditionals="0" methods="4" coveredmethods="0"/>
+        <metrics statements="12" coveredstatements="9" conditionals="4" coveredconditionals="1" methods="4" coveredmethods="3"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
-        <line num="5" count="0" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
         <line num="18" count="1" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
         <line num="29" count="1" type="stmt"/>
         <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="31" count="0" type="stmt"/>

@@ -3,28 +3,41 @@ import * as faker from "faker";
 import { app } from "../server";
 
 describe("POST /auth/register - a register endpoint", () => {
-  test("must return user data", (done) => {
+  test("must return user data", async () => {
+    const endpoint = "/auth/register";
+
     const username = faker.name.findName();
     const first_name = faker.name.firstName();
     const last_name = faker.name.lastName();
     const password = faker.random.word();
     const email = faker.internet.email();
 
-    request(app)
-      .post(`/api/v1/auth/register`)
-      .send({
-        username,
-        first_name,
-        last_name,
-        password,
-        email,
-      })
-      .expect(200)
-      .then((response) => {
-        console.log(response.body);
-        expect(response.body).toBeTruthy();
-        done();
-      })
-      .catch((err) => done(err));
+    const response = await request(app)
+      .post(`${process.env.BASE_URL}${endpoint}`)
+      .send({ username, first_name, last_name, password, email });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toMatchObject({
+      username,
+      first_name,
+      last_name,
+      email,
+    });
+  });
+
+  test("must return bad request", async () => {
+    const endpoint = "/auth/register";
+
+    const username = faker.name.findName();
+    const first_name = faker.name.firstName();
+    const last_name = faker.name.lastName();
+    const password = faker.random.word();
+    const email = faker.address.city(); // invalid email
+
+    const response = await request(app)
+      .post(`${process.env.BASE_URL}${endpoint}`)
+      .send({ username, first_name, last_name, password, email });
+    expect(response.statusCode).toBe(400);
+    console.log(response.body);
+    expect(response.body.message).toEqual("Bad request input");
   });
 });
