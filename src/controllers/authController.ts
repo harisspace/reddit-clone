@@ -140,6 +140,10 @@ export default {
         return next(new Api404Error("User not found"));
       }
 
+      if (!user.confirmed) {
+        return res.json({ message: "User need confirmation email" });
+      }
+
       const { password: passwordDB, ...newUser } = user;
 
       const passwordMatches = await bcrypt.compare(password, user.password);
@@ -152,6 +156,7 @@ export default {
       }
 
       token = generateToken(user);
+      // set to cookie
       res.set(
         "Set-Cookie",
         cookie.serialize("token", token, cookieOptions("login"))
@@ -191,7 +196,7 @@ export default {
     }
 
     try {
-      const user = await prisma.users.update({
+      await prisma.users.update({
         where: {
           email: (result as Partial<jwtResult>).username,
         },
@@ -200,6 +205,11 @@ export default {
     } catch (err) {
       return next(new Api404Error("User not updated"));
     }
+
+    res.set(
+      "Set-Cookie",
+      cookie.serialize("token", token, cookieOptions("login"))
+    );
 
     res.json({ success: true, redirect: "/api/v1/post" });
   },
