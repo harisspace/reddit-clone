@@ -4,9 +4,8 @@ export class Email {
   constructor(protected email: string, protected token: string) {
     this.email = email;
     this.token = token;
-    this.sendEmail(email, token);
   }
-  protected createTransport() {
+  public createTransport() {
     return nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -16,12 +15,12 @@ export class Email {
     });
   }
 
-  protected async sendEmail(email: string, token: string) {
-    await this.createTransport().sendMail({
+  public async sendEmail() {
+    return await this.createTransport().sendMail({
       from: process.env.GMAIL_USER!,
-      to: email,
+      to: this.email,
       subject: "Verification signin",
-      html: `<b>please click this <a href="http://localhost:4000/api/v1/auth/confirmation/${token}">link</a> to activation account</b>`,
+      html: `<b>please click this <a href="http://localhost:4000/api/v1/auth/confirmation/${this.token}">link</a> to activation account</b>`,
     });
   }
 }

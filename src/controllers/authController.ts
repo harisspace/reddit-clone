@@ -10,6 +10,7 @@ import { InternalError } from "../utils/errorHandler/InternalError";
 import { Api404Error } from "../utils/errorHandler/Api404Error";
 import { Email } from "../utils/email/SendEmail";
 import { ForbiddenError } from "../utils/errorHandler/ForbiddenError";
+import queryString from "querystring";
 
 export const User = {
   id: true,
@@ -96,7 +97,10 @@ export default {
 
     const token = generateToken({ username, email });
 
-    const sendEmail = new Email(email, token);
+    // send email
+    const email1 = new Email(email, token);
+    const resultEmail = await email1.sendEmail();
+    console.log(resultEmail);
 
     let data;
     const salt = await bcrypt.genSalt();
@@ -120,7 +124,10 @@ export default {
       });
     }
 
-    res.json(data);
+    res.json({
+      ...data,
+      message: "We will send you email message to confirm you're account",
+    });
   },
 
   login: async (req: Request, res: Response, next: NextFunction) => {
@@ -140,8 +147,24 @@ export default {
         return next(new Api404Error("User not found"));
       }
 
-      if (!user.confirmed) {
-        return res.json({ message: "User need confirmation email" });
+      // generate token
+      token = generateToken(user);
+
+      const { email } = user;
+      const query_string = queryString.stringify({ email, token });
+      // console.log(tokenQuery, emailQuery);
+
+      if (user && !user.confirmed) {
+        return res.json({
+          message: "User need confirmation email",
+          options: {
+            sendEmail: {
+              message:
+                "Not receive email?, pleases click this link to send back",
+              redirect: `/api/v1/auth/confirmation/sendEmail?${query_string}`,
+            },
+          },
+        });
       }
 
       const { password: passwordDB, ...newUser } = user;
@@ -155,7 +178,6 @@ export default {
         );
       }
 
-      token = generateToken(user);
       // set to cookie
       res.set(
         "Set-Cookie",
@@ -164,6 +186,7 @@ export default {
 
       return res.json(newUser);
     } catch (err) {
+      console.log(err);
       return next(new InternalError("Something went wrong"));
     }
   },
@@ -212,5 +235,39 @@ export default {
     );
 
     res.json({ success: true, redirect: "/api/v1/post" });
+  },
+
+  // resend token to email
+  resendEmail: async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+    const token = query.token as string;
+    const email = query.email as string;
+
+    jwt.verify(token, process.env.JWT_SECRET!, (err, decodedToken) => {
+      if (err) {
+        console.log(err);
+        return next(new ForbiddenError("Invalid token query string"));
+      }
+    });
+
+    if (query.email && query.token) {
+      try {
+        const user = await prisma.users.findUnique({ where: { email } });
+
+        if (!user) {
+          return next(new ForbiddenError("Invalid email query string"));
+        }
+
+        const sendEmail = new Email(email, token);
+        const resEmail = await sendEmail.sendEmail();
+        console.log(resEmail);
+      } catch (err) {
+        return next(new InternalError("Something went wrong"));
+      }
+    } else {
+      return next(new BadRequestError("Query string not valid"));
+    }
+
+    return res.json({ success: true });
   },
 };
