@@ -25,7 +25,7 @@ export default {
     }
 
     try {
-      // TODO: find subname on db
+      //  find subname on db
       const subs = await prisma.subs.findUnique({ where: { name: sub } });
       if (!subs) {
         return next(new Api404Error("Subs not found"));

@@ -8,19 +8,23 @@ datasource db {
 }
 
 model users {
-  id         Int        @id @default(autoincrement())
-  user_uid   String     @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  username   String     @unique @db.VarChar(150)
-  first_name String     @db.VarChar(100)
-  last_name  String     @db.VarChar(100)
-  confirmed  Boolean    @default(false)
-  email      String     @unique @db.VarChar(150)
-  password   String     @db.VarChar(250)
-  created_at DateTime   @default(now()) @db.Timestamptz(6)
-  updated_at DateTime   @default(now()) @db.Timestamptz(6)
-  comments   comments[]
-  posts      posts[]
-  subs       subs[]
+  id                                          Int             @id @default(autoincrement())
+  user_uid                                    String          @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  username                                    String          @unique @db.VarChar(150)
+  first_name                                  String          @db.VarChar(100)
+  last_name                                   String          @db.VarChar(100)
+  confirmed                                   Boolean         @default(false)
+  email                                       String          @unique @db.VarChar(150)
+  role                                        role
+  password                                    String          @db.VarChar(250)
+  created_at                                  DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                                  DateTime        @default(now()) @db.Timestamptz(6)
+  comments                                    comments[]
+  community                                   community[]
+  notifications_notifications_from_uidTousers notifications[] @relation("notifications_from_uidTousers")
+  notifications_notifications_to_uidTousers   notifications[] @relation("notifications_to_uidTousers")
+  posts                                       posts[]
+  subs                                        subs[]
 }
 
 model posts {
@@ -41,18 +45,19 @@ model posts {
 }
 
 model subs {
-  id          Int      @id @default(autoincrement())
-  sub_uid     String   @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name        String   @unique @db.VarChar(200)
-  title       String   @db.VarChar(200)
+  id          Int         @id @default(autoincrement())
+  sub_uid     String      @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String      @unique @db.VarChar(200)
+  title       String      @db.VarChar(200)
   description String?
-  image_urn   String?  @db.VarChar(250)
-  banner_urn  String?  @db.VarChar(250)
-  user_uid    String   @db.Uuid
-  post_uid    String?  @db.Uuid
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @db.Timestamptz(6)
-  users       users    @relation(fields: [user_uid], references: [user_uid])
+  image_urn   String?     @db.VarChar(250)
+  banner_urn  String?     @db.VarChar(250)
+  user_uid    String      @db.Uuid
+  post_uid    String?     @db.Uuid
+  created_at  DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime    @default(now()) @db.Timestamptz(6)
+  users       users       @relation(fields: [user_uid], references: [user_uid])
+  community   community[]
   posts       posts[]
 }
 
@@ -68,6 +73,30 @@ model comments {
   updated_at  DateTime @default(now()) @db.Timestamptz(6)
   posts       posts    @relation(fields: [post_uid], references: [post_uid])
   users       users    @relation(fields: [user_uid], references: [user_uid])
+}
+
+model community {
+  id            Int      @id @default(autoincrement())
+  community_uid String   @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_uid      String   @db.Uuid
+  role          role
+  sub_uid       String   @db.Uuid
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+  subs          subs     @relation(fields: [sub_uid], references: [sub_uid])
+  users         users    @relation(fields: [user_uid], references: [user_uid])
+}
+
+model notifications {
+  id                                  Int      @id @default(autoincrement())
+  read                                Boolean  @default(false)
+  message                             String   @db.VarChar(300)
+  from_uid                            String   @db.Uuid
+  to_uid                              String   @db.Uuid
+  created_at                          DateTime @default(now()) @db.Timestamptz(6)
+  updated_at                          DateTime @default(now()) @db.Timestamptz(6)
+  users_notifications_from_uidTousers users    @relation("notifications_from_uidTousers", fields: [from_uid], references: [user_uid])
+  users_notifications_to_uidTousers   users    @relation("notifications_to_uidTousers", fields: [to_uid], references: [user_uid])
 }
 
 enum role {

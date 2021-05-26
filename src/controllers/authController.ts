@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../server";
-import { registerValidation, loginValidation } from "../utils/authValidator";
+import {
+  registerValidation,
+  loginValidation,
+} from "../utils/authentication/authValidator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
@@ -11,6 +14,7 @@ import { Api404Error } from "../utils/errorHandler/Api404Error";
 import { Email } from "../utils/email/SendEmail";
 import { ForbiddenError } from "../utils/errorHandler/ForbiddenError";
 import queryString from "querystring";
+import { user_role } from "../utils/enum";
 
 export const User = {
   id: true,
@@ -114,6 +118,7 @@ export default {
           last_name,
           password,
           email,
+          role: user_role.USER,
         },
         select: User,
       });
@@ -125,7 +130,7 @@ export default {
     }
 
     res.json({
-      ...data,
+      user: { ...data },
       message: "We will send you email message to confirm you're account",
     });
   },
@@ -152,7 +157,6 @@ export default {
 
       const { email } = user;
       const query_string = queryString.stringify({ email, token });
-      // console.log(tokenQuery, emailQuery);
 
       if (user && !user.confirmed) {
         return res.json({
@@ -221,11 +225,12 @@ export default {
     try {
       await prisma.users.update({
         where: {
-          email: (result as Partial<jwtResult>).username,
+          email: (result as Partial<jwtResult>).email,
         },
         data: { confirmed: true },
       });
     } catch (err) {
+      console.log(err);
       return next(new Api404Error("User not updated"));
     }
 

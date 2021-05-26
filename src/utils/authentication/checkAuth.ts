@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { prisma } from "../server";
-import { User } from "../controllers/authController";
-import { UnauthorizedError } from "./errorHandler/UnauthorizedError";
-import { Api404Error } from "./errorHandler/Api404Error";
+import { prisma } from "../../server";
+import { User } from "../../controllers/authController";
+import { UnauthorizedError } from "../errorHandler/UnauthorizedError";
+import { Api404Error } from "../errorHandler/Api404Error";
 
 export const checkAuth = async (
   req: Request,
@@ -15,9 +15,12 @@ export const checkAuth = async (
     const token: string | undefined | null = req.cookies.token;
     if (!token) return next(new UnauthorizedError("Unauthenticated"));
 
-    const username: any = jwt.verify(token, process.env.JWT_SECRET!);
+    const jwtVerify: any = jwt.verify(token, process.env.JWT_SECRET!);
 
-    user = await prisma.users.findUnique({ where: { username }, select: User });
+    user = await prisma.users.findUnique({
+      where: { username: jwtVerify.username },
+      select: User,
+    });
     if (!user) throw new Error("Unauthenticated");
 
     res.locals.user = user;
